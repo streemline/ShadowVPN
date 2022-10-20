@@ -36,11 +36,10 @@ fi
 
 for line in sys.stdin:
     line = line.strip()
-    if not line:
-        continue
-    elif line.startswith('#'):
+    if not line or line and line.startswith('#'):
         continue
     subnet = ip_network(line)
-    print('route $add_or_delete -net %s netmask %s $tun' %
-          (subnet.network_address, subnet.netmask))
+    print(
+        f'route $add_or_delete -net {subnet.network_address} netmask {subnet.netmask} $tun'
+    )
 

@@ -28,9 +28,7 @@ s = [ip_network('0.0.0.0/0')]
 
 for line in sys.stdin:
     line = line.strip()
-    if not line:
-        continue
-    elif line.startswith('#'):
+    if not line or line and line.startswith('#'):
         continue
     ex_subnet = ip_network(line)
     i = bisect.bisect_right(s, ex_subnet) - 1
@@ -40,8 +38,7 @@ for line in sys.stdin:
             # since chnroute.txt is sorted, here we are always operating
             # the last few objects in s, which is almost O(1)
             del s[i]
-            sub_subnets = list(subnet.address_exclude(ex_subnet))
-            sub_subnets.sort()
+            sub_subnets = sorted(subnet.address_exclude(ex_subnet))
             for sub_subnet in sub_subnets:
                 s.insert(i, sub_subnet)
                 i += 1
